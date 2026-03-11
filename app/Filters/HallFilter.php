@@ -42,6 +42,15 @@ class HallFilter extends QueryFilter
         });
     }
 
+    // Фильтр по категориям оборудования
+    public function equipment_category($categories)
+    {
+        $categories = is_array($categories) ? $categories : explode(',', $categories);
+        return $this->builder->whereHas('equipment', function ($q) use ($categories) {
+            $q->whereIn('equipment.category', $categories);
+        });
+    }
+
     // Фильтр по доступности на даты (самая важная часть MVP 3.1)
     // Ожидает массив ['start' => '...', 'end' => '...']
     public function date_range($range)

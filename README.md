@@ -5,6 +5,7 @@ MVP клиент-серверного приложения для организ
 ## 🚀 Технологический стек
 
 *   **Backend:** PHP 8.3 + Laravel 12
+*   **Frontend:** Angular 19 + Angular Material
 *   **Database:** PostgreSQL 15
 *   **Infrastructure:** Docker, Docker Compose
 *   **Auth:** Laravel Sanctum (Token based)
@@ -116,7 +117,48 @@ docker exec -it bp_app php artisan tinker --execute="echo App\Models\Manager::fi
 
 ---
 
-## 📂 Структура проекта
+## 🖥 Фронтенд
+
+Фронтенд — SPA на Angular 19, запускается отдельно от бэкенда.
+
+### Технологии
+*   **Angular 19** (standalone components)
+*   **Angular Material** — UI-компоненты
+*   **RxJS** — реактивные запросы
+*   **Nginx** — production-сборка в Docker-контейнере
+
+### Структура (`frontend/src/app/`)
+
+*   `core/services/` — сервисы: `AuthService`, `HallsService`, `BookingsService`, `ApiService`
+*   `core/interceptors/` — `AuthInterceptor` (добавляет Bearer-токен к запросам)
+*   `core/guards/` — `AuthGuard` (защита маршрутов менеджера)
+*   `features/halls/` — публичный каталог и детальная страница залов
+*   `features/booking/` — форма бронирования и страница успеха
+*   `features/manager/` — кабинет менеджера: бронирования, залы, отчёты, логин
+*   `layout/` — шаблоны разметки: публичный сайт и панель менеджера
+
+### Запуск в development-режиме
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+Приложение будет доступно на `http://localhost:4200`. Запросы к `/api` проксируются на бэкенд (`http://localhost`) через `proxy.conf.json`.
+
+### Сборка для production
+
+```bash
+cd frontend
+npm run build
+```
+
+Собранные файлы попадают в `frontend/dist/` и раздаются через Nginx внутри Docker-контейнера.
+
+---
+
+## 📂 Структура проекта (Backend)
 
 *   `app/Filters` — логика фильтрации залов (QueryFilter паттерн).
 *   `app/Models` — модели Eloquent со связями и UUID трейтами.
